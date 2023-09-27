@@ -9,11 +9,12 @@
 </template>
  
 <script>
+import {ref} from 'vue';
 export default {
   setup() {
-    let name = 'Lucky Haejin'
+    const name = ref({id:1})
     const updateName = () => { 
-      name = 'Happy Haejin';//반응형이 아니라서 console출력결과만 바뀌고 화면은 바뀌지 않음
+      name.value.id = 2;
       console.log(name)
     }
     return {
