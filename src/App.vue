@@ -21,14 +21,13 @@
         </button>
       </div>
     </form>
-    <div class="card mt-2">
+    <div 
+    v-for="todo in todos"
+    :key="todo.id"
+    class="card mt-2"
+    >
       <div class="card-body p-2">
-        {{ todos[0].subject }}
-      </div>
-    </div>
-    <div class="card mt-2">
-      <div class="card-body p-2">
-        {{ todos[1].subject }}
+        {{ todo.subject }}
       </div>
     </div>
   </div>
@@ -46,7 +45,10 @@ export default {
     ]);
 
     const onSubmit = () => { 
-      todos.value.push(todo); 
+      todos.value.push({
+        id:Date.now(),
+        subject:todo.value
+      }); 
 
     }
     return {
