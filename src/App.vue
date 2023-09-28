@@ -40,7 +40,7 @@
           >
           <label 
             class="form-check-label"
-            :style="todo.completed? todoStyle: {}"  
+            :class="{todo:todo.completed}"  
           >
             {{ todo.subject }}
           </label>
@@ -55,10 +55,6 @@
 import {ref} from 'vue';
 export default {
   setup() {
-    const todoStyle = {
-      textDecoration: 'line-through',
-      color: 'gray'
-    }
     const hasError = ref(false);
     const todo = ref('');
     const todos = ref([]);
@@ -81,11 +77,14 @@ export default {
       hasError,
       todo,
       todos,
-      onSubmit,
-      todoStyle
+      onSubmit
     };
   },
 }
 </script>
 <style>
+  .todo {
+    color:gray;
+    text-decoration:line-through;
+  }
 </style>
