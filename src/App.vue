@@ -35,7 +35,18 @@
     class="card mt-2"
     >
       <div class="card-body p-2">
-        {{ todo.subject }}
+        <div class="form-check">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            v-model="todo.completed"
+          >
+          <label
+            class="form-check-label"
+          >
+          {{ todo.subject }}
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -49,10 +60,7 @@ export default {
     const hasError = ref(false);
     const toggle = ref(false);
     const todo = ref('');
-    const todos = ref([
-      {id:1,subject: 'js공부하기'},
-      {id:2,subject: 'vue공부하기'}
-    ]);
+    const todos = ref([]);
 
     const onSubmit = () => { 
       if(todo.value === ''){
@@ -60,9 +68,11 @@ export default {
       } else {
         todos.value.push({
           id:Date.now(),
-          subject:todo.value
+          subject:todo.value,
+          completed:false//true이면 todo 추가시 체크된 상태로 추가됨
         }); 
         hasError.value = false;
+        todo.value = '';
       }
     }
 
