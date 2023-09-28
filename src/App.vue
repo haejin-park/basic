@@ -1,7 +1,4 @@
 <template>
-  <div v-if="toggle">true</div>
-  <div v-else>false</div>
-  <button @click="onToggle">Toggle</button>
   <div class="container">
     <h2>To-Do List</h2>
     <form 
@@ -30,9 +27,9 @@
       </div>
     </form>
     <div 
-    v-for="todo in todos"
-    :key="todo.id"
-    class="card mt-2"
+      v-for="todo in todos"
+      :key="todo.id"
+      class="card mt-2"
     >
       <div class="card-body p-2">
         <div class="form-check">
@@ -41,10 +38,11 @@
             type="checkbox"
             v-model="todo.completed"
           >
-          <label
+          <label 
             class="form-check-label"
+            :style="todo.completed? todoStyle: {}"  
           >
-          {{ todo.subject }}
+            {{ todo.subject }}
           </label>
         </div>
       </div>
@@ -57,8 +55,11 @@
 import {ref} from 'vue';
 export default {
   setup() {
+    const todoStyle = {
+      textDecoration: 'line-through',
+      color: 'gray'
+    }
     const hasError = ref(false);
-    const toggle = ref(false);
     const todo = ref('');
     const todos = ref([]);
 
@@ -76,23 +77,15 @@ export default {
       }
     }
 
-    const onToggle = () => {
-      toggle.value = !toggle.value;
-    }
-
     return {
       hasError,
-      toggle,
-      onToggle,
       todo,
       todos,
-      onSubmit
+      onSubmit,
+      todoStyle
     };
   },
 }
 </script>
 <style>
-  .name {
-    color:red;
-  }
 </style>
