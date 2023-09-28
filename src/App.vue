@@ -1,31 +1,9 @@
 <template>
   <div class="container">
     <h2>To-Do List</h2>
-    <form 
-      @submit.prevent="onSubmit"
-      >
-      <div class="d-flex">
-        <div class="flex-grow-1 mr-2">
-          <input 
-          class="form-control"
-          type="text" 
-          v-model="todo" 
-          placeholder="Type new to-do"
-          >
-        </div>
-        <div>
-          <button 
-            class="btn btn-primary"
-            type="submit"
-            >
-            Add
-          </button>
-        </div>
-      </div>
-      <div v-show="hasError" style="color: red">s
-        This field cannot be empty
-      </div>
-    </form>
+    <TodoSimpleForm
+      @add-todo="addTodo"
+    />
     <div v-if="!todos.length">
       추가된 Todo가 없습니다.
     </div>
@@ -64,36 +42,25 @@
  
 <script>
 import {ref} from 'vue';
+import TodoSimpleForm from './components/TodoSimpleForm.vue';
 export default {
+  components: {
+    TodoSimpleForm
+  },
   setup() {
-    const deleteTodo = (index) => {
-      console.log('delete todo');
-      todos.value.splice(index,1 );
-    }
-    const hasError = ref(false);
-    const todo = ref('');
     const todos = ref([]);
-
-    const onSubmit = () => { 
-      if(todo.value === ''){
-        hasError.value = true;
-      } else {
-        todos.value.push({
-          id:Date.now(),
-          subject:todo.value,
-          completed:false//true이면 todo 추가시 체크된 상태로 추가됨
-        }); 
-        hasError.value = false;
-        todo.value = '';
-      }
+    const addTodo = (todo) => { 
+      console.log(todo);
+      todos.value.push(todo);
+    }
+    const deleteTodo = (index) => {
+      todos.value.splice(index,1);
     }
 
     return {
       deleteTodo,
-      hasError,
-      todo,
       todos,
-      onSubmit
+      addTodo
     };
   },
 }
