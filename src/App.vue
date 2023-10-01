@@ -50,7 +50,7 @@
 </template>
  
 <script>
-import {ref, computed, reactive, watchEffect} from 'vue';
+import {ref, computed, reactive, watch} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 import axios from 'axios';
@@ -63,28 +63,26 @@ export default {
     const todos = ref([]);
     const error = ref('');
     const numberOfTodos = ref(0);
-    let limit = 5;
-    // const limit = 5;
+    const limit = 5;
     const currentPage = ref(1);
-
-    // watchEffect(() => {
-    //   console.log(currentPage.value);
-    //   console.log(numberOfTodos.value);
-    // });
-    const a = reactive({
-      b: 1
-    });
-    watchEffect(() => {
-      console.log(a.b);
-    });
-    a.b = 4;
-    watchEffect(() => {
-      console.log(limit);
-    });
-    limit = 3;
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfTodos.value/limit);
     });
+    // watch(currentPage, (currentPage, prev) => {
+    // console.log(currentPage, prev);
+    // });
+    watch([currentPage, numberOfTodos], (currentPage, prev) => {
+      console.log(currentPage, prev);
+    });
+    const a = reactive({
+      b: 1,
+      c: 3
+    });
+    watch(() => [a.b, a.c], (current, prev) => {
+      console.log(current, prev);
+    });
+    a.b = 2;
+
     const getTodos = async(page = currentPage.value) => {
       currentPage.value = page;
       try {
