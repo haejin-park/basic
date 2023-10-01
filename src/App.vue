@@ -65,9 +65,18 @@ export default {
     const toggleTodo = (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인 
       todos.value[index].completed = !todos.value[index].completed
     }
-    const deleteTodo = (index) => {
-      todos.value.splice(index,1);
+    const deleteTodo = async (index) => {
+      error.value = '';
+      const id = todos.value[index].id;
+      try {
+        await axios.delete('http://localhost:3000/todos/' + id);
+        todos.value.splice(index, 1);
+      } catch(err) {
+        console.log(err);
+        error.value = 'Something went wrong';
+      }
     }
+
     const searchText = ref('');
     const filteredTodos = computed(() => {
       if(searchText.value){
