@@ -28,13 +28,10 @@ export default {
   setup() {
     const todos = ref([]);
     const addTodo = (todo) => { 
-      console.log(todo);
       todos.value.push(todo);
     }
-    const toggleTodo = (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인
-      console.log(todos.value[index].completed);
+    const toggleTodo = (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인 
       todos.value[index].completed = !todos.value[index].completed
-      console.log(todos.value[index].completed);
     }
     const deleteTodo = (index) => {
       todos.value.splice(index,1);
