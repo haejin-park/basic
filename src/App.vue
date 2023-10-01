@@ -20,6 +20,31 @@
       @toggle-todo="toggleTodo"
       @delete-todo="deleteTodo"
     />
+    <hr />
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li 
+          v-if="currentPage !== 1"
+          class="page-item"
+        > 
+          <a style="cursor: pointer" class="page-link" @click="getTodos(currentPage - 1)">Previous</a>
+        </li>
+        <li 
+          v-for="page in numberOfPages"
+          :key="page"
+          class="page-item"
+          :class="currentPage === page? 'active' : ''"
+        >
+          <a style="cursor: pointer" class="page-link" @click="getTodos(page)">{{ page }}</a>
+        </li>
+        <li 
+          v-if="currentPage !== numberOfPages"
+          class="page-item"
+        >
+          <a style="cursor: pointer" class="page-link" @click="getTodos(currentPage + 1)">Next</a>
+        </li>
+      </ul>
+    </nav>
   </div>
 
 </template>
@@ -37,25 +62,32 @@ export default {
   setup() {
     const todos = ref([]);
     const error = ref('');
-    const getTodos = async() => {
+    const numberOfTodos = ref(0);
+    const limit = 5;
+    const currentPage = ref(1);
+    const numberOfPages = computed(() => {
+      return Math.ceil(numberOfTodos.value/limit);
+    });
+    const getTodos = async(page = currentPage.value) => {
+      currentPage.value = page;
       try {
-        const res = await axios.get('http://localhost:3000/todos')
+        const res = await axios.get(`http://localhost:3000/todos?_sort_id&_order=desc&_page=${page}&_limit=${limit}`);
+        numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
-        console.log(res.data);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
       }
     }
-    getTodos();
+    getTodos(1);
     const addTodo = async (todo) => { 
       error.value = '';
       try {
-        const res = await axios.post('http://localhost:3000/todos',{
+        await axios.post('http://localhost:3000/todos',{
         subject: todo.subject,
         completed: todo.completed
       });
-      todos.value.push(res.data);
+        getTodos(currentPage.value);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
@@ -66,10 +98,10 @@ export default {
       error.value = '';
       const id = todos.value[index].id;
       try{
-        await axios.patch('http://localhost:3000/todos/' + id, {
+        await axios.patch('https://localhost:3000/todos/' + id, {
           completed: !todos.value[index].completed
         });
-        todos.value[index].completed = !todos.value[index].completed
+        todos.value[index].completed = !todos.value[index].completeds
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
@@ -80,7 +112,7 @@ export default {
       const id = todos.value[index].id;
       try {
         await axios.delete('http://localhost:3000/todos/' + id);
-        todos.value.splice(index, 1);
+        getTodos(currentPage.value);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
@@ -105,7 +137,9 @@ export default {
       toggleTodo,
       deleteTodo,
       searchText,
-      filteredTodos
+      filteredTodos,
+      numberOfPages,
+      currentPage
     };
   },
 }
