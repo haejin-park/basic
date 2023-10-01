@@ -2,12 +2,12 @@
   "todos": [
     {
       "subject": "3",
-      "completed": false,
+      "completed": true,
       "id": 3
     },
     {
       "subject": "4",
-      "completed": false,
+      "completed": true,
       "id": 4
     }
   ]

@@ -62,8 +62,18 @@ export default {
       }
     };
     
-    const toggleTodo = (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인 
-      todos.value[index].completed = !todos.value[index].completed
+    const toggleTodo = async (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인 
+      error.value = '';
+      const id = todos.value[index].id;
+      try{
+        await axios.patch('http://localhost:3000/todos/' + id, {
+          completed: !todos.value[index].completed
+        });
+        todos.value[index].completed = !todos.value[index].completed
+      } catch(err) {
+        console.log(err);
+        error.value = 'Something went wrong';
+      }
     }
     const deleteTodo = async (index) => {
       error.value = '';
