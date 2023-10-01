@@ -32,26 +32,30 @@
 </template>
 
 <script>
+import { watchEffect } from 'vue';
 export default {
-    props: {
-        todos : {
-            type: Array,
-            required: true
-        }
-    },
-    emits: ['toggle-todo', 'delete-todo'],
-    setup (props, {emit}) {
-        const toggleTodo = (index) => {
-            emit('toggle-todo', index);
-        }
-        const deleteTodo = (index) => {
-            emit('delete-todo', index);
-        }
-        return {
-            toggleTodo,
-            deleteTodo
-        }
+  props: {
+      todos : {
+          type: Array,
+          required: true
+      }
+  },
+  emits: ['toggle-todo', 'delete-todo'],
+  setup (props, {emit}) {
+    watchEffect(() => {
+      console.log(props.todos.length);
+    });
+    const toggleTodo = (index) => {
+        emit('toggle-todo', index);
     }
+    const deleteTodo = (index) => {
+        emit('delete-todo', index);
+    }
+    return {
+        toggleTodo,
+        deleteTodo
+    }
+  }
 }
 </script>
 
