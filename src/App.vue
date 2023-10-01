@@ -12,11 +12,11 @@
       @add-todo="addTodo"
     />
     <div style="color:red">{{ error }}</div>
-    <div v-if="!filteredTodos.length">
+    <div v-if="!todos.length">
       There is nothing to display
     </div>
     <TodoList
-      :todos="filteredTodos"
+      :todos="todos"
       @toggle-todo="toggleTodo"
       @delete-todo="deleteTodo"
     />
@@ -50,7 +50,7 @@
 </template>
  
 <script>
-import {ref, computed, reactive, watch} from 'vue';
+import {ref, computed, watch} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 import axios from 'axios';
@@ -65,28 +65,16 @@ export default {
     const numberOfTodos = ref(0);
     const limit = 5;
     const currentPage = ref(1);
+    const searchText = ref('');
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfTodos.value/limit);
     });
-    // watch(currentPage, (currentPage, prev) => {
-    // console.log(currentPage, prev);
-    // });
-    watch([currentPage, numberOfTodos], (currentPage, prev) => {
-      console.log(currentPage, prev);
-    });
-    const a = reactive({
-      b: 1,
-      c: 3
-    });
-    watch(() => [a.b, a.c], (current, prev) => {
-      console.log(current, prev);
-    });
-    a.b = 2;
-
     const getTodos = async(page = currentPage.value) => {
       currentPage.value = page;
       try {
-        const res = await axios.get(`http://localhost:3000/todos?_sort_id&_order=desc&_page=${page}&_limit=${limit}`);
+        const res = await axios.get(
+          `http://localhost:3000/todos?_sort=id&_order=desc&subject_like=${searchText.value}&_page=${page}&_limit=${limit}`
+          );
         numberOfTodos.value = res.headers['x-total-count'];
         todos.value = res.data;
       } catch(err) {
@@ -94,7 +82,7 @@ export default {
         error.value = 'Something went wrong';
       }
     }
-    getTodos(1);
+    getTodos();
     const addTodo = async (todo) => { 
       error.value = '';
       try {
@@ -102,21 +90,21 @@ export default {
         subject: todo.subject,
         completed: todo.completed
       });
-        getTodos(currentPage.value);
+        getTodos(1);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
       }
     };
     
-    const toggleTodo = async (index) => {//체크박스 클릭 전 후 completed바뀌는지 확인 
+    const toggleTodo = async (index) => {
       error.value = '';
       const id = todos.value[index].id;
       try{
-        await axios.patch('https://localhost:3000/todos/' + id, {
+        await axios.patch('http://localhost:3000/todos/' + id, {
           completed: !todos.value[index].completed
         });
-        todos.value[index].completed = !todos.value[index].completeds
+        todos.value[index].completed = !todos.value[index].completed
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
@@ -127,32 +115,25 @@ export default {
       const id = todos.value[index].id;
       try {
         await axios.delete('http://localhost:3000/todos/' + id);
-        getTodos(currentPage.value);
+        getTodos(1);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
       }
     }
 
-    const searchText = ref('');
-    const filteredTodos = computed(() => {
-      if(searchText.value){
-        return todos.value.filter(todo => {
-          return todo.subject.includes(searchText.value);
-        });
-      }
-      return todos.value;
+    watch(searchText, () => {
+      getTodos(1);
     })
 
     return {
       todos,
       error,
+      searchText,
       getTodos,
       addTodo,
       toggleTodo,
       deleteTodo,
-      searchText,
-      filteredTodos,
       numberOfPages,
       currentPage
     };
