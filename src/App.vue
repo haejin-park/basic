@@ -1,6 +1,12 @@
 <template>
   <div class="container">
     <h2>To-Do List</h2>
+    <h4>count : {{ count }}</h4>
+    <h4>double Count Compted: {{ doubleCountComputed }}</h4>
+    <h4>double Count Compted: {{ doubleCountComputed }}</h4>
+    <h4>double Count Method: {{ doubleCountMethod() }}</h4>
+    <h4>double Count Method: {{ doubleCountMethod() }}</h4>
+    <button @click="count++">Add One</button>
     <TodoSimpleForm
       @add-todo="addTodo"
     />
@@ -17,7 +23,7 @@
 </template>
  
 <script>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import TodoSimpleForm from './components/TodoSimpleForm.vue';
 import TodoList from './components/TodoList.vue';
 export default {
@@ -36,13 +42,23 @@ export default {
     const deleteTodo = (index) => {
       todos.value.splice(index,1);
     }
-
-
+    const count = ref(1);
+    const doubleCountComputed = computed(() => {
+      console.log(count.value);
+      return count.value * 2;
+    });
+    const doubleCountMethod = () => {
+      console.log(count.value);
+      return count.value * 2;
+    }
     return {
       todos,
       addTodo,
       toggleTodo,
-      deleteTodo
+      deleteTodo,
+      count,
+      doubleCountComputed,
+      doubleCountMethod
     };
   },
 }
