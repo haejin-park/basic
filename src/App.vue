@@ -37,6 +37,17 @@ export default {
   setup() {
     const todos = ref([]);
     const error = ref('');
+    const getTodos = async() => {
+      try {
+        const res = await axios.get('http://localhost:3000/todos')
+        todos.value = res.data;
+        console.log(res.data);
+      } catch(err) {
+        console.log(err);
+        error.value = 'Something went wrong';
+      }
+    }
+    getTodos();
     const addTodo = async (todo) => { 
       error.value = '';
       try {
@@ -66,9 +77,11 @@ export default {
       }
       return todos.value;
     })
+
     return {
       todos,
       error,
+      getTodos,
       addTodo,
       toggleTodo,
       deleteTodo,
