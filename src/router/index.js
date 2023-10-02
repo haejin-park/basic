@@ -13,12 +13,12 @@ const router = createRouter({
         },
         {
             path: '/todos',
-            name: '/Todos',
+            name: 'Todos',
             component: Todos
         },
         {
             path: '/todos/:id',
-            name: '/Todo',
+            name: 'Todo',
             component: Todo
         }
     ]
