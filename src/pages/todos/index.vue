@@ -1,5 +1,4 @@
 <template>
-  <div class="container">
     <h2>To-Do List</h2>
     <input
       class="form-control"
@@ -46,7 +45,6 @@
         </li>
       </ul>
     </nav>
-  </div>
 </template>
 
 <script>
