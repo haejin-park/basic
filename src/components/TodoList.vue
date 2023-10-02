@@ -6,26 +6,28 @@
     >
       <div 
       class="card-body p-2 d-flex align-items-center"
+      style="cursor:pointer"
       @click="moveToPage(todo.id)"
       >      
-      <div class="form-check flex-grow-1">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            :checked="todo.completed"
-            @change="toggleTodo(index)"
-          >
-          <label 
-            class="form-check-label"
-            :class="{todo:todo.completed}"  
-          >
-            {{ todo.subject }}
-          </label>
-        </div>
+      <div class="flex-grow-1">
+        <input
+          class="ml-2 mr-2"
+          type="checkbox"
+          :checked="todo.completed"
+          @change="toggleTodo(index, $event)"        
+          @click.stop   
+        >
+        <span
+          class="form-check-label"
+          :class="{todo:todo.completed}"  
+        >
+          {{ todo.subject }}
+        </span>
+      </div>
         <div>
           <button 
             class="btn btn-danger btn-sm"
-            @click="deleteTodo(index)"
+            @click.stop="deleteTodo(index)"
           >
             Delete
           </button>
@@ -45,8 +47,8 @@ export default {
   },
   emits: ['toggle-todo', 'delete-todo'],
   setup (props, {emit}) {
-    const toggleTodo = (index) => {
-        emit('toggle-todo', index);
+    const toggleTodo = (index, event) => {
+        emit('toggle-todo', index, event.target.checked);
     }
     const deleteTodo = (index) => {
         emit('delete-todo', index);
