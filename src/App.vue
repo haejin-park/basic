@@ -6,6 +6,7 @@
       type="text"
       v-model="searchText"
       placeholder="Search"
+      @keyup.enter="searchTodo"
       >
     <hr/>
     <TodoSimpleForm
@@ -115,16 +116,25 @@ export default {
       const id = todos.value[index].id;
       try {
         await axios.delete('http://localhost:3000/todos/' + id);
-        getTodos(1);
+        getTodos(currentPage.value);
       } catch(err) {
         console.log(err);
         error.value = 'Something went wrong';
       }
     }
-
+    let timeout = null;    
+    const searchTodo = () => {
+      clearTimeout(timeout);
+      getTodos(1);  
+    }
     watch(searchText, () => {
-      getTodos(1);
-    })
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        getTodos(1);
+      }, 2000)
+    });
+
+
 
     return {
       todos,
@@ -135,7 +145,8 @@ export default {
       toggleTodo,
       deleteTodo,
       numberOfPages,
-      currentPage
+      currentPage,
+      searchTodo
     };
   },
 }
