@@ -33,7 +33,11 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">
+        <button 
+            type="submit"
+            class="btn btn-primary"
+            :disabled="!todoUpdated"   
+        >    
             Save
         </button>
         <button 
@@ -46,21 +50,28 @@
 </template>
 
 <script>
-import {ref} from 'vue';
+import {ref, computed} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import axios from 'axios'
+import _ from 'lodash';
 export default {
     setup() {
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
+        const originalTodo = ref(null);
         const loading = ref(true);
         const todoId = route.params.id
+
         const getTodo = async () => {
             const res = await axios.get(`http://localhost:3000/todos/${todoId}`);           
-            todo.value = res.data;
+            todo.value = {...res.data};
+            originalTodo.value = {...res.data};
             loading.value = false;
         }
+        const todoUpdated = computed(() => {
+            return !_.isEqual(todo.value, originalTodo.value);
+        })
         const toggleTodoStatus = () => {
             todo.value.complted = !todo.value.completed;
         }
@@ -75,6 +86,7 @@ export default {
                 completed:todo.value.completed
             });
             console.log(res);
+            originalTodo.value = {...res.data};
         }
         getTodo();
         return {
@@ -82,7 +94,8 @@ export default {
             loading,
             toggleTodoStatus,
             moveTodoListPage,
-            onSave
+            onSave,
+            todoUpdated
         }
     }
 }
