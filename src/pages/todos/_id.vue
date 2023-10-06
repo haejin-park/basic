@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import {ref, computed, onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted} from 'vue';
+import {ref, computed, onUnmounted} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import axios from 'axios'
 import _ from 'lodash';
@@ -66,33 +66,6 @@ export default {
         Toast
     }, 
     setup() {
-        // DOM에 마운트 되기 전 사용
-        onBeforeMount(() => {
-            console.log(document.querySelector('#kossie')); //null
-        });
-        //DOM에 마운트 됐을 때 사용 
-        onMounted(() => {
-            console.log(document.querySelector('#kossie')); //<div id="kossie"></div>
-        });
-        //state가 업데이트 되기 전에 실행됨
-        onBeforeUpdate(() => {
-            console.log('before update');
-        });
-        //state가 업데이트 되었을 때 사용
-        onUpdated(() => {
-            console.log('updated');
-        });
-        //컴포넌트가 돔에서 빠지기 전에 실행됨
-        onBeforeUnmount(() => {
-            console.log('before unmount');
-        });
-        //컴포넌트가 돔에서 빠졌을 때
-        onUnmounted(() => {
-            console.log('unmount');
-        });
-
-        console.log('hello');//onBeforeMount보다 먼저 찍힘
-
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
@@ -102,6 +75,11 @@ export default {
         const showToast = ref(false)
         const toastMessage = ref('');
         const toastAlertType = ref('');
+        const timeout = ref(null);
+       //다른 페이지 이동시 setTimeout멈추게해서 hello안뜨게 하싶을 떄 
+        onUnmounted(() => {
+            clearTimeout(timeout.value);
+        });
         const getTodo = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/todos/${todoId}`);           
@@ -133,11 +111,12 @@ export default {
             toastMessage.value = message;
             toastAlertType.value = type;
             showToast.value = true;
-            setTimeout(() => {
+            timeout.value = setTimeout(() => {
+                console.log('hello');
                 toastMessage.value = '';
                 toastAlertType.value = '';
                 showToast.value = false;
-            }, 3000)
+            }, 5000)
         }
 
         const onSave = async () => {
