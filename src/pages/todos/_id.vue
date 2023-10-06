@@ -52,10 +52,11 @@
         :message="toastMessage"
         :type="toastAlertType"
     />
+    <div id="kossie"></div>
 </template>
 
 <script>
-import {ref, computed} from 'vue';
+import {ref, computed, onBeforeMount, onMounted, onBeforeUpdate, onUpdated, onBeforeUnmount, onUnmounted} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import axios from 'axios'
 import _ from 'lodash';
@@ -65,6 +66,33 @@ export default {
         Toast
     }, 
     setup() {
+        // DOM에 마운트 되기 전 사용
+        onBeforeMount(() => {
+            console.log(document.querySelector('#kossie')); //null
+        });
+        //DOM에 마운트 됐을 때 사용 
+        onMounted(() => {
+            console.log(document.querySelector('#kossie')); //<div id="kossie"></div>
+        });
+        //state가 업데이트 되기 전에 실행됨
+        onBeforeUpdate(() => {
+            console.log('before update');
+        });
+        //state가 업데이트 되었을 때 사용
+        onUpdated(() => {
+            console.log('updated');
+        });
+        //컴포넌트가 돔에서 빠지기 전에 실행됨
+        onBeforeUnmount(() => {
+            console.log('before unmount');
+        });
+        //컴포넌트가 돔에서 빠졌을 때
+        onUnmounted(() => {
+            console.log('unmount');
+        });
+
+        console.log('hello');//onBeforeMount보다 먼저 찍힘
+
         const route = useRoute();
         const router = useRouter();
         const todo = ref(null);
