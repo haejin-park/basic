@@ -56,12 +56,6 @@
       "id": 12
     },
     {
-      "subject": "12",
-      "completed": false,
-      "body": "update",
-      "id": 13
-    },
-    {
       "subject": "vue.js",
       "completed": false,
       "body": "오늘 끝낼거야",
