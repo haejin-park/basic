@@ -51,11 +51,6 @@
       "id": 11
     },
     {
-      "subject": "11",
-      "completed": false,
-      "id": 12
-    },
-    {
       "subject": "vue.js",
       "completed": false,
       "body": "오늘 끝낼거야",
