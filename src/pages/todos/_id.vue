@@ -56,11 +56,12 @@
 </template>
 
 <script>
-import {ref, computed, onUnmounted} from 'vue';
+import {ref, computed} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import axios from 'axios'
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
+import {useToast} from '@/composables/toast'
 export default {
     components: {
         Toast
@@ -72,14 +73,7 @@ export default {
         const originalTodo = ref(null);
         const loading = ref(true);
         const todoId = route.params.id
-        const showToast = ref(false)
-        const toastMessage = ref('');
-        const toastAlertType = ref('');
-        const timeout = ref(null);
-       //다른 페이지 이동시 setTimeout멈추게해서 hello안뜨게 하싶을 떄 
-        onUnmounted(() => {
-            clearTimeout(timeout.value);
-        });
+        const { showToast, toastMessage, toastAlertType, triggerToast} = useToast();
         const getTodo = async () => {
             try {
                 const res = await axios.get(`http://localhost:3000/todos/${todoId}`);           
@@ -106,19 +100,6 @@ export default {
                 name:'Todos'
             })
         };
-
-        const triggerToast = (message, type= 'success') => {
-            toastMessage.value = message;
-            toastAlertType.value = type;
-            showToast.value = true;
-            timeout.value = setTimeout(() => {
-                console.log('hello');
-                toastMessage.value = '';
-                toastAlertType.value = '';
-                showToast.value = false;
-            }, 5000)
-        }
-
         const onSave = async () => {
             try {
                 const res = await axios.put(`http://localhost:3000/todos/${todoId}`, {
