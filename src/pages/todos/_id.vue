@@ -1,130 +1,13 @@
 <template>
     <h1>To-do Page</h1>
-    <div v-if="loading">
-        Loading...
-    </div>
-    <form 
-    v-else
-    @submit.prevent="onSave"
-    >
-        <div class="row">
-            <div class="col-6">
-                <div class="form-group">
-                    <label>Subject</label>
-                    <input 
-                        v-model="todo.subject" 
-                        type="text" 
-                        class="form-control"
-                    > 
-                </div>
-            </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <label>Status</label>
-                    <div>
-                        <button
-                            class="btn"  
-                            :class="todo.completed? 'btn-success' : 'btn-danger'"
-                            @click="togglTodoStatus"
-                        >
-                            {{todo.completed? 'Completed': 'Incomplete'}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button 
-            type="submit"
-            class="btn btn-primary"
-            :disabled="!todoUpdated"   
-        >    
-            Save
-        </button>
-        <button 
-            class="btn btn-outline-dark ml-2"
-            @click="moveTodoListPage"
-        >        
-            Cancel
-        </button>
-    </form>
-    <Toast 
-        v-if="showToast" 
-        :message="toastMessage"
-        :type="toastAlertType"
-    />
-    <div id="kossie"></div>
+    <TodoForm :editing="true"/>
 </template>
 
 <script>
-import {ref, computed} from 'vue';
-import {useRoute,useRouter} from 'vue-router';
-import axios from 'axios'
-import _ from 'lodash';
-import Toast from '@/components/Toast.vue';
-import {useToast} from '@/composables/toast'
+import TodoForm from '@/components/TodoForm.vue';
 export default {
     components: {
-        Toast
-    }, 
-    setup() {
-        const route = useRoute();
-        const router = useRouter();
-        const todo = ref(null);
-        const originalTodo = ref(null);
-        const loading = ref(true);
-        const todoId = route.params.id
-        const { showToast, toastMessage, toastAlertType, triggerToast} = useToast();
-        const getTodo = async () => {
-            try {
-                const res = await axios.get(`http://localhost:3000/todos/${todoId}`);           
-                todo.value = {...res.data};
-                originalTodo.value = {...res.data};
-                loading.value = false;
-            } catch(error) {
-                console.log(error);
-                triggerToast('Something went wrong', 'danger');
-            }
-        }
-        getTodo();
-
-        const todoUpdated = computed(() => {
-            return !_.isEqual(todo.value, originalTodo.value);
-        });
-
-        const toggleTodoStatus = () => {
-            todo.value.complted = !todo.value.completed;
-        }
-
-        const moveTodoListPage = () => {
-            router.push({
-                name:'Todos'
-            })
-        };
-        const onSave = async () => {
-            try {
-                const res = await axios.put(`http://localhost:3000/todos/${todoId}`, {
-                subject: todo.value.subject,
-                completed:todo.value.completed
-                });
-                console.log(res);
-                originalTodo.value = {...res.data};
-                triggerToast('Successfully saved!');
-            } catch(error) {
-                console.log(error);
-                triggerToast('Something went wrong', 'danger');
-            }
-        }
-        return {
-            todo,
-            loading,
-            toggleTodoStatus,
-            moveTodoListPage,
-            onSave,
-            todoUpdated,
-            showToast,
-            toastMessage,
-            toastAlertType
-        }
+        TodoForm
     }
 }
 </script>
