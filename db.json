@@ -26,12 +26,7 @@
       "id": 5
     },
     {
-      "subject": "6",
-      "completed": false,
-      "id": 6
-    },
-    {
-      "subject": "jpa, queryDsl",
+      "subject": "mysql, jpa, queryDsl",
       "completed": false,
       "id": 7
     },
@@ -54,8 +49,14 @@
     {
       "subject": "html, css, javascript, typescript",
       "completed": false,
-      "body": "1007",
+      "body": "10/07까지 하기",
       "id": 15
+    },
+    {
+      "subject": "codingTest",
+      "completed": false,
+      "body": "",
+      "id": 16
     }
   ]
 }
