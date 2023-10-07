@@ -3,8 +3,7 @@ export default createStore({
     state: {
         toastMessage : '',
         toastAlertType : '',
-        showToast : false,
-        timeout : null
+        showToast : false
     }, 
     mutations: {
         UPDATE_TOAST_MESSAGE(state, payload) {

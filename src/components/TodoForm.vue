@@ -60,14 +60,13 @@
 </template>
 
 <script>
-import {ref, computed, onUpdated} from 'vue';
+import {ref, computed} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import _ from 'lodash';
 import Toast from '@/components/Toast.vue';
 import {useToast} from '@/composables/toast'
 import Input from '@/components/Input.vue';
 import axios from '@/axios'
-import {useStore} from 'vuex';
 export default {
     components: {
         Toast,
@@ -80,8 +79,6 @@ export default {
         }
     },
     setup(props) {
-        const store = useStore();
-        console.log(store.state.showToast);
         const route = useRoute();
         const router = useRouter();
         const todo = ref({
@@ -89,9 +86,6 @@ export default {
             completed: false,
             body: ''
         });
-        onUpdated(()=> {
-            console.log(todo.value.subject);
-        })
         const subjectError = ref('');
         const originalTodo = ref(null);
         const loading = ref(false);
@@ -124,7 +118,7 @@ export default {
         });
 
         const toggleTodoStatus = () => {
-            todo.value.complted = !todo.value.completed;
+            todo.value.completed = !todo.value.completed;
         }
 
         const moveTodoListPage = () => {
