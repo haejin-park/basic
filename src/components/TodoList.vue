@@ -45,7 +45,7 @@ import {useRouter} from 'vue-router';
 import Modal from '@/components/DeleteModal.vue';
 import {ref} from 'vue';
 import List from '@/components/List.vue';
-
+import { getCurrentInstance } from 'vue';
 export default {
   components: {
     Modal,
@@ -58,8 +58,8 @@ export default {
    }
   },
   emits: ['toggle-todo', 'delete-todo'],
-  setup (props, {emit}) {
-
+  setup () {
+    const {emit} =  getCurrentInstance();
     const toggleTodo = (index, event) => {
         emit('toggle-todo', index, event.target.checked);
     }
