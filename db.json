@@ -36,7 +36,7 @@
       "id": 7
     },
     {
-      "subject": "spring",
+      "subject": "spring boot",
       "completed": false,
       "id": 8
     },
@@ -52,9 +52,9 @@
       "id": 14
     },
     {
-      "subject": "html, css, js, ts ",
+      "subject": "html, css, javascript, typescript",
       "completed": false,
-      "body": "내일 모레까지 끝내자",
+      "body": "1007",
       "id": 15
     }
   ]
