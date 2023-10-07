@@ -93,7 +93,12 @@ export default {
         const originalTodo = ref(null);
         const loading = ref(false);
         const todoId = route.params.id
-        const { showToast, toastMessage, toastAlertType, triggerToast} = useToast();
+        const {
+            showToast,
+            toastMessage,
+            toastAlertType,
+            triggerToast
+        } = useToast();
         const getTodo = async () => {
             loading.value = true;
             try {
@@ -148,6 +153,11 @@ export default {
                 }
                 const message = 'Successfully ' + (props.editing ? 'Updated!':'Created!');
                 triggerToast(message);
+                if(!props.editing){
+                    router.push({
+                        name:'Todos'
+                    })
+                }
             } catch(error) {
                 console.log(error);
                 triggerToast('Something went wrong', 'danger');
