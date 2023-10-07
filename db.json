@@ -69,6 +69,12 @@
       "completed": false,
       "body": "11자 복근",
       "id": 20
+    },
+    {
+      "subject": "하체운동",
+      "completed": false,
+      "body": "스쿼트\n런지",
+      "id": 21
     }
   ]
 }

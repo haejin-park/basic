@@ -49,24 +49,17 @@
         </li>
       </ul>
     </nav>
-  <Toast 
-    v-if="showToast" 
-    :message="toastMessage"
-    :type="toastAlertType"
-  />
 </template>
 
 <script>
 import {ref, computed, watch} from 'vue';
 import TodoList from '@/components/TodoList.vue';
 import axios from '@/axios';
-import Toast from '@/components/Toast.vue';
 import {useToast} from '@/composables/toast'
 import {useRouter} from 'vue-router';
 export default {
     components: {
-      TodoList,
-      Toast
+      TodoList
   },
   setup() {
     const router = useRouter();
@@ -79,8 +72,13 @@ export default {
     const numberOfPages = computed(() => {
       return Math.ceil(numberOfTodos.value/limit);
     });
-    const { showToast, toastMessage, toastAlertType, triggerToast} = useToast();
-   
+    const { 
+          showToast,
+          toastMessage,
+          toastAlertType,
+          triggerToast
+          } = useToast();
+    
     const getTodos = async(page = currentPage.value) => {
       currentPage.value = page;
       try {
@@ -112,7 +110,6 @@ export default {
     };
     
     const toggleTodo = async (index, checked) => {
-      console.log(checked);
       error.value = '';
       const id = todos.value[index].id;
       try{

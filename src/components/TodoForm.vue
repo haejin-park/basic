@@ -50,26 +50,17 @@
             Cancel
         </button>
     </form>
-    <transition name="fade">
-    <Toast 
-        v-if="showToast" 
-        :message="toastMessage"
-        :type="toastAlertType"
-    />
-    </transition>
 </template>
 
 <script>
 import {ref, computed} from 'vue';
 import {useRoute,useRouter} from 'vue-router';
 import _ from 'lodash';
-import Toast from '@/components/Toast.vue';
 import {useToast} from '@/composables/toast'
 import Input from '@/components/Input.vue';
 import axios from '@/axios'
 export default {
     components: {
-        Toast,
         Input
     }, 
     props: {
@@ -91,11 +82,11 @@ export default {
         const loading = ref(false);
         const todoId = route.params.id
         const {
-            showToast,
-            toastMessage,
-            toastAlertType,
-            triggerToast
-        } = useToast();
+              showToast,
+              toastMessage,
+              toastAlertType,
+              triggerToast
+              } = useToast();
         const getTodo = async () => {
             loading.value = true;
             try {
