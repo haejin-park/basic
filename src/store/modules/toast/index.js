@@ -1,36 +1,26 @@
 export default {
     namespaced: true,
     state: {
-        toastMessage : '',
-        toastAlertType : '',
-        showToast : false
+        toasts: []
     }, 
     mutations: {
-        UPDATE_TOAST_MESSAGE(state, payload) {
-            state.toastMessage = payload;
+        ADD_TOAST(state, payload) {
+            state.toasts.push(payload);
         },
-        UPDATE_TOAST_ALERT_TYPE(state, payload) {
-            state.toastAlertType = payload;      
-        },
-        UPDATE_TOAST_STATUS(state, payload) {
-            state.showToast = payload;
+        REMOVE_TOAST(state){
+            state.toasts.shift();//첫번쨰 아이템을 지워주도록
         }
     },
     actions: {
         triggerToast({commit}, payload){
-            commit('UPDATE_TOAST_MESSAGE', payload.message);
-            commit('UPDATE_TOAST_ALERT_TYPE',payload.type);
-            commit('UPDATE_TOAST_STATUS', true);
+            commit('ADD_TOAST', {
+                id:Date.now(),
+                message: payload.message,
+                type: payload.type
+            });
             setTimeout(() => {
-                commit('UPDATE_TOAST_MESSAGE', '');
-                commit('UPDATE_TOAST_ALERT_TYPE','');
-                commit('UPDATE_TOAST_STATUS', false);
+                commit('REMOVE_TOAST')
             }, 5000)
-        }
-    },
-    getters: {
-        toastMessageWithSmile(state){
-            return state.toastMessage + '^_^'
         }
     }
 }
